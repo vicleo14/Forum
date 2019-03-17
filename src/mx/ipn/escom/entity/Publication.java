@@ -6,6 +6,10 @@ import java.io.Serializable;
  * 
  */
 public class Publication implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected Integer idPub;
 	protected String text;
 	protected String image;

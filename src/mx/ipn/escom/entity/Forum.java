@@ -6,6 +6,10 @@ import java.util.Date;
 import java.util.List;
 
 public class Forum extends Publication implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Date date;
 	private String title;
 	private List<Comment> comments;

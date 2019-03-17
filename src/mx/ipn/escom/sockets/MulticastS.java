@@ -113,10 +113,7 @@ public class MulticastS {
 		
 	}
 	public void sendObject(Object obj) throws IOException
-	{
-		byte[] b=new byte[maxSize];
-		
-		
+	{		
 		ByteArrayOutputStream baos=new ByteArrayOutputStream();
 		ObjectOutputStream oos=new ObjectOutputStream(baos);
 		oos.writeObject(obj);
