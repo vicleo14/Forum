@@ -4,7 +4,9 @@
 
 package mx.ipn.escom.entity;
 
-public class Comment extends Publication{
+import java.io.Serializable;
+
+public class Comment extends Publication implements Serializable{
 	public Comment()
 	{
 		

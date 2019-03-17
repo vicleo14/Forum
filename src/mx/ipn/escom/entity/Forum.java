@@ -1,10 +1,11 @@
 package mx.ipn.escom.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Forum extends Publication {
+public class Forum extends Publication implements Serializable{
 	private Date date;
 	private String title;
 	private List<Comment> comments;

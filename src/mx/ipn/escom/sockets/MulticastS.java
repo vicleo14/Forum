@@ -76,12 +76,12 @@ public class MulticastS {
 		try
 		{
 			this.inetAddress=inetAddress;
-			this.ttl=128;
+			this.ttl=ttl;
 			this.port =port;
 			this.reuseAddress=reuseAddress;
-
-			this.multicastSocket.setTimeToLive(ttl);
+			
 			this.multicastSocket=new MulticastSocket(port);
+			this.multicastSocket.setTimeToLive(ttl);
 			this.multicastSocket.setReuseAddress(reuseAddress);
 			this.group=InetAddress.getByName(inetAddress);
 			this.multicastSocket.joinGroup(group);

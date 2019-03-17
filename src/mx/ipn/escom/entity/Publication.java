@@ -1,8 +1,11 @@
 package mx.ipn.escom.entity;
+
+import java.io.Serializable;
+
 /*
  * 
  */
-public class Publication {
+public class Publication implements Serializable{
 	protected Integer idPub;
 	protected String text;
 	protected String image;

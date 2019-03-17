@@ -3,7 +3,9 @@
 */
 package mx.ipn.escom.entity;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 	private String nickName;
 	private String password;
 	
@@ -26,6 +28,10 @@ public class User {
 		this.password = password;
 	}
 	
-	
+	@Override
+	public String toString()
+	{
+		return nickName;
+	}
 
 }
