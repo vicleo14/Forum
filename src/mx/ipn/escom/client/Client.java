@@ -4,16 +4,26 @@ import mx.ipn.escom.sockets.TcpClientSocket;
 import mx.ipn.escom.entity.Forum;
 import mx.ipn.escom.entity.ForumsList;
 import mx.ipn.escom.entity.User;
+import mx.ipn.escom.frames.JLogIn;
+import mx.ipn.escom.frames.JMainWindow;
+import mx.ipn.escom.frames.JNewForum;
 
 import javax.xml.stream.events.Comment;
 
 import mx.ipn.escom.constants.TcpRequestName;
 public class Client {
+	private JLogIn jlog;
+	private JMainWindow jmw;
+	public Client()
+	{
+		jlog=new JLogIn();
+		jmw=new JMainWindow();
+	}
 	
 	public static void main(String[] args) {
 		System.out.println("Cliente en ejecución");
-		MulticastS msc=new MulticastS("228.1.1.1",9999,true);
-		
+		//MulticastS msc=new MulticastS("228.1.1.1",9999,true);
+		Client c=new Client();
 		
 		try
 		{
@@ -43,6 +53,7 @@ public class Client {
 		{
 			tcpcs.sendObjec(TcpRequestName.NEW_FORUM);
 			tcpcs.sendObjec(forum);
+			tcpcs.closeConection();
 		}
 		catch(Exception ex)
 		{
