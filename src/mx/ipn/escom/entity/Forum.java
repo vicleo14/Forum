@@ -34,6 +34,14 @@ public class Forum extends Publication implements Serializable{
 		comments=new ArrayList<Comment>();
 		
 	}
+	
+	public Forum(String title,String info) 
+	{
+		super(null,null,info,null);//La imagen es nula
+		this.date=new Date();;
+		this.title=title;
+		comments=new ArrayList<Comment>();
+	}
 
 	public Date getDate() {
 		return date;
@@ -57,5 +65,11 @@ public class Forum extends Publication implements Serializable{
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
 	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
+	
 
 }

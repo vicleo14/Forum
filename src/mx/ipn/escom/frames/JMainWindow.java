@@ -43,9 +43,6 @@ public class JMainWindow extends JFrame  implements ActionListener {
 	public JMainWindow()
 	{
 		super("Forum");
-		init();
-		String s="<h1>Hola</h1><br /> <h3>Cool</h3>";	
-		jepForum.setText(s);
 	
 	}
 	
@@ -111,11 +108,12 @@ public class JMainWindow extends JFrame  implements ActionListener {
 		this.add(jspForums,BorderLayout.WEST);
 		this.setSize(width, height);
 		this.setResizable(false);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+		
+	}
+	public void view()
+	{
 		this.setVisible(true);
-		
-		
-		
 	}
 	
 	public void actionPerformed (ActionEvent e)

@@ -11,54 +11,34 @@ import mx.ipn.escom.frames.JNewForum;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.xml.stream.events.Comment;
 import mx.ipn.escom.constants.TcpRequestName;
 
 public class Client extends JMainWindow implements ActionListener{
 	
-	
+	private User user;
+	private JNewForum jnf;
 	
 	private JLogIn jlog;
-	private JMainWindow jmw;
 	public Client()
 	{
 		super();
+		init();
 		setListeners();
-	}
-	
-	public static void main(String[] args) {
-		System.out.println("Cliente en ejecución");
-		//MulticastS msc=new MulticastS("228.1.1.1",9999,true);
-		Client c=new Client();
 		
-		try
-		{
-			/**
-			  for(;;)
-			 
-			{
-				Object obj=msc.receiveObject();
-				if(obj instanceof User)
-				{
-					User user=(User)obj;
-					System.out.println(user.toString());
-				}
-				else
-					System.out.println(obj.toString());
-			}*///Implementacion del multicast
-			
-		
-			
-		}catch(Exception ex) 
-		{}
-	}
-	
-	
-	
-	
+		jlog=new JLogIn(this);
+		System.out.println("Termina init");
+	}	
 	public void newForum(Forum forum)
-	{	TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
+	
+	{	
+		
+		System.out.println("Invoc al método que conecta con socket. Descomentar código");
+		System.out.println("Forum title:"+forum.getTitle());
+		System.out.println("Forum info:"+forum.getText());
+		System.out.println("Forum user:"+forum.getUser());
+		jnf=null;
+		/*TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
 		try
 		{
 			tcpcs.sendObjec(TcpRequestName.NEW_FORUM);
@@ -68,7 +48,7 @@ public class Client extends JMainWindow implements ActionListener{
 		catch(Exception ex)
 		{
 			System.out.println("Error al eniar foro:"+ex.toString());
-		}
+		}*/
 	}
 	
 	public void newComment(Comment comment)
@@ -123,8 +103,11 @@ public class Client extends JMainWindow implements ActionListener{
 	
 	public Boolean authenticateUser(User user)
 	{	
+		System.out.println("Invoca authenticateUser en Client. Descomentar para conectar con socket");
+		this.setUser(user);
+		view();
 		Boolean bool=false; 
-		try
+		/*try
 		{
 			TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
 			tcpcs.sendObjec(TcpRequestName.AUTHENTICATE_USER);
@@ -134,8 +117,8 @@ public class Client extends JMainWindow implements ActionListener{
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error al eniar comentario:"+ex.toString());
-		}
+			System.out.println("Error al enviar comentario:"+ex.toString());
+		}*/
 		return bool;
 	}
 	public void setListeners()
@@ -154,7 +137,7 @@ public class Client extends JMainWindow implements ActionListener{
 	      
 	      if(e.getSource().equals(btnNewForum))
 	      {
-	    	  System.out.println("Boton new forum");
+	    	  jnf=new JNewForum(this);
 	      }
 	      
 	      if(e.getSource().equals(btnAddComment))
@@ -167,6 +150,49 @@ public class Client extends JMainWindow implements ActionListener{
 	    	  System.out.println("Boton load image");
 	      }
 	}
+	
+	
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+		this.setTitle("Forum("+user.getNickName()+")");
+		System.out.println("User:"+user.getNickName());
+	}
+	public JLogIn getJlog() {
+		return jlog;
+	}
+	public void setJlog(JLogIn jlog) {
+		this.jlog = jlog;
+	}
+	public static void main(String[] args) {
+		System.out.println("Cliente en ejecución");
+		//MulticastS msc=new MulticastS("228.1.1.1",9999,true);
+		Client c=new Client();
+		
+		try
+		{
+			/**
+			  for(;;)
+			 
+			{
+				Object obj=msc.receiveObject();
+				if(obj instanceof User)
+				{
+					User user=(User)obj;
+					System.out.println(user.toString());
+				}
+				else
+					System.out.println(obj.toString());
+			}*///Implementacion del multicast
+			
+		
+			
+		}catch(Exception ex) 
+		{}
+	}
+	
 	
 	
 }

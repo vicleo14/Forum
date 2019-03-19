@@ -41,6 +41,16 @@ public class Publication implements Serializable{
 	public void setImage(String image) {
 		this.image = image;
 	}
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 	
 
 }

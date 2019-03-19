@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import mx.ipn.escom.client.Client;
 import mx.ipn.escom.entity.User;
 
 public class JLogIn extends JFrame  implements ActionListener{
@@ -25,12 +26,13 @@ public class JLogIn extends JFrame  implements ActionListener{
 	private JPasswordField jpfPswd;
 	private final int width=300;
 	private final int height=130;
+	private Client root;
 	
-	
-	public JLogIn()
+	public JLogIn(Client root)
 	{
 		super("Log In");
-		
+		this.root=root;	
+		init();
 	}
 	public void init()
 	{
@@ -38,6 +40,8 @@ public class JLogIn extends JFrame  implements ActionListener{
 		lblPassword=new JLabel("Password:");
 		btnAceptar=new JButton("Aceptar");
 		btnCancelar=new JButton("Cancelar");
+		btnAceptar.addActionListener(this);
+		btnCancelar.addActionListener(this);
 		jtfUser=new JTextField();
 		jpfPswd=new JPasswordField();
 		
@@ -56,6 +60,17 @@ public class JLogIn extends JFrame  implements ActionListener{
 	
 	public void actionPerformed (ActionEvent e)
 	{
+	      if(e.getSource().equals(btnCancelar))
+	    	  System.exit(0);
+	      else if (e.getSource().equals(btnAceptar))
+	      {
+	    	  String nickName=jtfUser.getText();
+	    	  String password=jpfPswd.getText();
+	    	  User user=new User(nickName,password);  
+	    	  root.authenticateUser(user);
+	    	  this.setVisible(false);
+	    	  
+	      }
 	      
 	}
 	
