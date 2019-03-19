@@ -10,6 +10,7 @@ import mx.ipn.escom.frames.JNewForum;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.xml.stream.events.Comment;
 import mx.ipn.escom.constants.TcpRequestName;
@@ -20,17 +21,21 @@ public class Client extends JMainWindow implements ActionListener{
 	private JNewForum jnf;
 	
 	private JLogIn jlog;
+	private Forum forum;
 	public Client()
 	{
 		super();
 		init();
 		setListeners();
+		forum=new Forum();
+		forum.setDate(new Date());
+		forum.setIdPub(-1);
+		forum.setText("No se ha seleccionado ningún foro");
 		
 		jlog=new JLogIn(this);
 		System.out.println("Termina init");
 	}	
 	public void newForum(Forum forum)
-	
 	{	
 		
 		System.out.println("Invoc al método que conecta con socket. Descomentar código");
@@ -38,7 +43,7 @@ public class Client extends JMainWindow implements ActionListener{
 		System.out.println("Forum info:"+forum.getText());
 		System.out.println("Forum user:"+forum.getUser());
 		jnf=null;
-		/*TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
+		TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
 		try
 		{
 			tcpcs.sendObjec(TcpRequestName.NEW_FORUM);
@@ -48,7 +53,7 @@ public class Client extends JMainWindow implements ActionListener{
 		catch(Exception ex)
 		{
 			System.out.println("Error al eniar foro:"+ex.toString());
-		}*/
+		}
 	}
 	
 	public void newComment(Comment comment)
@@ -83,6 +88,7 @@ public class Client extends JMainWindow implements ActionListener{
 		}
 		return forum;
 	}
+	/*Revisar viabilidad de método*/
 	public ForumsList lookForForum(String input)
 	{	
 		ForumsList forumsList=null;
@@ -107,7 +113,7 @@ public class Client extends JMainWindow implements ActionListener{
 		this.setUser(user);
 		view();
 		Boolean bool=false; 
-		/*try
+		try
 		{
 			TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
 			tcpcs.sendObjec(TcpRequestName.AUTHENTICATE_USER);
@@ -118,7 +124,7 @@ public class Client extends JMainWindow implements ActionListener{
 		catch(Exception ex)
 		{
 			System.out.println("Error al enviar comentario:"+ex.toString());
-		}*/
+		}
 		return bool;
 	}
 	public void setListeners()
@@ -142,6 +148,7 @@ public class Client extends JMainWindow implements ActionListener{
 	      
 	      if(e.getSource().equals(btnAddComment))
 	      {
+	    	  Comment comment;
 	    	  System.out.println("Boton add comment");
 	      }
 	      
@@ -171,9 +178,9 @@ public class Client extends JMainWindow implements ActionListener{
 		//MulticastS msc=new MulticastS("228.1.1.1",9999,true);
 		Client c=new Client();
 		
-		try
+		/**try
 		{
-			/**
+			
 			  for(;;)
 			 
 			{
@@ -185,12 +192,12 @@ public class Client extends JMainWindow implements ActionListener{
 				}
 				else
 					System.out.println(obj.toString());
-			}*///Implementacion del multicast
+			}
 			
 		
 			
 		}catch(Exception ex) 
-		{}
+		{}*///Implementacion del multicast
 	}
 	
 	

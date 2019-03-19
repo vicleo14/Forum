@@ -72,7 +72,6 @@ public class JNewForum extends JFrame  implements ActionListener{
 	{
 	      if(e.getSource().equals(btnPost))
 	      {
-	    	  System.out.println("Se generó evento con POST");
 	    	  String title=txtTitle.getText();
 	    	  String info=jepInfo.getText();
 	    	  forum=new Forum(null,title,root.getUser().getNickName(),info,null,new Date());
