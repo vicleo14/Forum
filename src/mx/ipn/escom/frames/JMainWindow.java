@@ -1,6 +1,8 @@
 package mx.ipn.escom.frames;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -16,28 +18,28 @@ import javax.swing.border.BevelBorder;
 
 import javax.swing.JEditorPane;
 
-public class JMainWindow extends JFrame {
+public class JMainWindow extends JFrame  implements ActionListener {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTextField txtSearch;
-	private JButton btnSearch;
-	private JButton btnNewForum;
-	private JButton btnAddComment;
-	private JButton btnLoadImage;
-	private JPanel jpSouth;
-	private JPanel jpSouth1;
-	private JPanel jpSouth2;
-	private JPanel jpSouth3;
-	private JEditorPane jepForum;
-	private JEditorPane jepComment;
-	private JList jlstForums;
-	private DefaultListModel model;
-	private JScrollPane jspForums;	
+	protected JTextField txtSearch;
+	protected JButton btnSearch;
+	protected JButton btnNewForum;
+	protected JButton btnAddComment;
+	protected JButton btnLoadImage;
+	protected JPanel jpSouth;
+	protected JPanel jpSouth1;
+	protected JPanel jpSouth2;
+	protected JPanel jpSouth3;
+	protected JEditorPane jepForum;
+	protected JEditorPane jepComment;
+	protected JList jlstForums;
+	protected DefaultListModel model;
+	protected JScrollPane jspForums;	
 	
-	private final int width=700;
-	private final int height=300;
+	protected final int width=700;
+	protected final int height=300;
 	public JMainWindow()
 	{
 		super("Forum");
@@ -114,6 +116,11 @@ public class JMainWindow extends JFrame {
 		
 		
 		
+	}
+	
+	public void actionPerformed (ActionEvent e)
+	{
+	      
 	}
 	
 

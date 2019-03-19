@@ -1,22 +1,23 @@
 package mx.ipn.escom.frames;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 
-import javax.swing.border.BevelBorder;
 
 
 import javax.swing.JEditorPane;
-public class JNewForum extends JFrame {
+public class JNewForum extends JFrame  implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField txtTitle;
 	private JEditorPane jepInfo;
 	private JLabel lblTitle;
@@ -38,6 +39,8 @@ public class JNewForum extends JFrame {
 		txtTitle=new JTextField();
 		btnPost=new JButton("Post");
 		btnImage=new JButton("Search image");
+		btnPost.addActionListener(this);
+		btnImage.addActionListener(this);
 		lblTitle=new JLabel("Title");
 		jepInfo=new JEditorPane();
 		jpNorth=new JPanel(new GridLayout(1,2));
@@ -58,6 +61,14 @@ public class JNewForum extends JFrame {
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		this.setVisible(true);
 		
+	}
+	
+	public void actionPerformed (ActionEvent e)
+	{
+	      if(e.getSource().equals(btnPost))
+	      {
+	    	  System.out.println("Se generó evento con POST");
+	      }
 	}
 
 }

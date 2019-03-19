@@ -8,16 +8,23 @@ import mx.ipn.escom.frames.JLogIn;
 import mx.ipn.escom.frames.JMainWindow;
 import mx.ipn.escom.frames.JNewForum;
 
-import javax.xml.stream.events.Comment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
+import javax.xml.stream.events.Comment;
 import mx.ipn.escom.constants.TcpRequestName;
-public class Client {
+
+public class Client extends JMainWindow implements ActionListener{
+	
+	
+	
 	private JLogIn jlog;
 	private JMainWindow jmw;
 	public Client()
 	{
-		jlog=new JLogIn();
-		jmw=new JMainWindow();
+		super();
+		setListeners();
 	}
 	
 	public static void main(String[] args) {
@@ -46,6 +53,9 @@ public class Client {
 		}catch(Exception ex) 
 		{}
 	}
+	
+	
+	
 	
 	public void newForum(Forum forum)
 	{	TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
@@ -127,6 +137,35 @@ public class Client {
 			System.out.println("Error al eniar comentario:"+ex.toString());
 		}
 		return bool;
+	}
+	public void setListeners()
+	{
+		btnSearch.addActionListener(this);
+		btnNewForum.addActionListener(this);
+		btnAddComment.addActionListener(this);
+		btnLoadImage.addActionListener(this);
+	}
+	public void actionPerformed (ActionEvent e)
+	{
+	      if(e.getSource().equals(btnSearch))
+	      {
+	    	  System.out.println("Boton search");
+	      }
+	      
+	      if(e.getSource().equals(btnNewForum))
+	      {
+	    	  System.out.println("Boton new forum");
+	      }
+	      
+	      if(e.getSource().equals(btnAddComment))
+	      {
+	    	  System.out.println("Boton add comment");
+	      }
+	      
+	      if(e.getSource().equals(btnLoadImage))
+	      {
+	    	  System.out.println("Boton load image");
+	      }
 	}
 	
 	
