@@ -50,7 +50,7 @@ public class Forum extends Publication implements Serializable{
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
+	
 	public String getTitle() {
 		return title;
 	}

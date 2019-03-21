@@ -10,13 +10,13 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 
 public class MulticastS {
-	private InetAddress group;
-    private int port;
-    private MulticastSocket multicastSocket;
-    private String inetAddress;
-    private boolean reuseAddress;
-    private int ttl;
-    private int maxSize=65535;
+	protected InetAddress group;
+	protected int port;
+	protected MulticastSocket multicastSocket;
+	protected String inetAddress;
+	protected boolean reuseAddress;
+	protected int ttl;
+	protected int maxSize=65535;
 	public MulticastS()
 	{
 		try
@@ -127,6 +127,7 @@ public class MulticastS {
 	public Object receiveObject() 
 			throws IOException, ClassNotFoundException
 	{
+		System.out.println("A espera de objetos del servidor");
 		DatagramPacket p = new DatagramPacket(new byte[maxSize],maxSize);
 		multicastSocket.receive(p);//Bloqueante
 		byte[] b=p.getData();

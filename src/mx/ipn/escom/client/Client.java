@@ -10,23 +10,33 @@ import mx.ipn.escom.frames.JNewForum;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Date;
 
+import javax.swing.JFileChooser;
 import javax.xml.stream.events.Comment;
 import mx.ipn.escom.constants.TcpRequestName;
 
 public class Client extends JMainWindow implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Runnable ct;
+	private MulticastS msc;
 	
 	private User user;
 	private JNewForum jnf;
 	
 	private JLogIn jlog;
 	private Forum forum;
+	
 	public Client()
 	{
 		super();
 		init();
 		setListeners();
+		
 		forum=new Forum();
 		forum.setDate(new Date());
 		forum.setIdPub(-1);
@@ -34,6 +44,9 @@ public class Client extends JMainWindow implements ActionListener{
 		
 		jlog=new JLogIn(this);
 		System.out.println("Termina init");
+		msc=new MulticastS("228.1.1.1",9999,true);
+		ct=new ClientThread(msc);
+		new Thread(ct).start();
 	}	
 	public void newForum(Forum forum)
 	{	
@@ -42,7 +55,7 @@ public class Client extends JMainWindow implements ActionListener{
 		System.out.println("Forum title:"+forum.getTitle());
 		System.out.println("Forum info:"+forum.getText());
 		System.out.println("Forum user:"+forum.getUser());
-		jnf=null;
+		setJnf(null);
 		TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
 		try
 		{
@@ -109,7 +122,7 @@ public class Client extends JMainWindow implements ActionListener{
 	
 	public Boolean authenticateUser(User user)
 	{	
-		System.out.println("Invoca authenticateUser en Client. Descomentar para conectar con socket");
+		System.out.println("Invoca authenticateUser en Client.");
 		this.setUser(user);
 		view();
 		Boolean bool=false; 
@@ -143,7 +156,7 @@ public class Client extends JMainWindow implements ActionListener{
 	      
 	      if(e.getSource().equals(btnNewForum))
 	      {
-	    	  jnf=new JNewForum(this);
+	    	  setJnf(new JNewForum(this));
 	      }
 	      
 	      if(e.getSource().equals(btnAddComment))
@@ -155,6 +168,13 @@ public class Client extends JMainWindow implements ActionListener{
 	      if(e.getSource().equals(btnLoadImage))
 	      {
 	    	  System.out.println("Boton load image");
+	    	  JFileChooser jfc=new JFileChooser();
+	    	  int r=jfc.showOpenDialog(null);
+	    	  if(r==JFileChooser.APPROVE_OPTION)
+	    	  {
+					File f=jfc.getSelectedFile();
+					System.out.println("Leyo archivo");
+	    	  }
 	      }
 	}
 	
@@ -173,33 +193,17 @@ public class Client extends JMainWindow implements ActionListener{
 	public void setJlog(JLogIn jlog) {
 		this.jlog = jlog;
 	}
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		System.out.println("Cliente en ejecución");
-		//MulticastS msc=new MulticastS("228.1.1.1",9999,true);
-		Client c=new Client();
-		
-		/**try
-		{
-			
-			  for(;;)
-			 
-			{
-				Object obj=msc.receiveObject();
-				if(obj instanceof User)
-				{
-					User user=(User)obj;
-					System.out.println(user.toString());
-				}
-				else
-					System.out.println(obj.toString());
-			}
-			
-		
-			
-		}catch(Exception ex) 
-		{}*///Implementacion del multicast
+		Client c;
+		c = new Client();	
 	}
-	
-	
+	public JNewForum getJnf() {
+		return jnf;
+	}
+	public void setJnf(JNewForum jnf) {
+		this.jnf = jnf;
+	}
 	
 }

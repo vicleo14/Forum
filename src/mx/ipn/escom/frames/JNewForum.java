@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -15,6 +16,7 @@ import mx.ipn.escom.client.Client;
 import mx.ipn.escom.entity.Forum;
 
 import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
 public class JNewForum extends JFrame  implements ActionListener{
 	/**
 	 * 
@@ -37,6 +39,7 @@ public class JNewForum extends JFrame  implements ActionListener{
 	{
 		super("New forum");
 		this.root=root;
+		forum=new Forum();
 		init();
 	}
 	public void init()
@@ -48,6 +51,7 @@ public class JNewForum extends JFrame  implements ActionListener{
 		btnImage.addActionListener(this);
 		lblTitle=new JLabel("Title");
 		jepInfo=new JEditorPane();
+		jepInfo.setContentType("text/html");
 		jpNorth=new JPanel(new GridLayout(1,2));
 		jpNorth.add(lblTitle);
 		jpNorth.add(txtTitle);
@@ -79,6 +83,28 @@ public class JNewForum extends JFrame  implements ActionListener{
 	    	  root.newForum(forum);
 	    	  
 	      }
+	      if(e.getSource().equals(btnImage))
+	      {
+	    	  System.out.println("Boton load image");
+	    	  JFileChooser jfc=new JFileChooser();
+	    	  int r=jfc.showOpenDialog(this);
+	    	  if(r==JFileChooser.APPROVE_OPTION)
+	    	  {
+					File f=jfc.getSelectedFile();
+					String name="";
+					String path="";
+					name=f.getName();
+					path=f.getAbsolutePath();
+					forum.setImage(name);
+					String text="";
+					text=(forum.getText()==null)?text:text+forum.getText();
+					text+="<img src='file:"+path+"' width='200' height='200'></img><br />";
+					forum.setText(text);
+					System.out.println(text);
+					jepInfo.setText(text);
+	    	  }
+	      }
+	      
 	}
 	public JTextField getTxtTitle() {
 		return txtTitle;
