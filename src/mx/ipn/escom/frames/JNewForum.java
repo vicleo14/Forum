@@ -1,3 +1,12 @@
+/*
+ * Author: Morales Flores Victor Leonel
+ * Author: Ortiz Rivas Julio Cesar
+ * ESCOM-IPN(MX)
+ * Date:
+ * Description:
+ * 
+ */
+
 package mx.ipn.escom.frames;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -78,7 +87,10 @@ public class JNewForum extends JFrame  implements ActionListener{
 	      {
 	    	  String title=txtTitle.getText();
 	    	  String info=jepInfo.getText();
-	    	  forum=new Forum(null,title,root.getUser().getNickName(),info,null,new Date());
+	    	  int indexIni=info.indexOf("<body>")+7;
+	    	  int indexEnd=info.indexOf("</body>");
+	    	  info=info.substring(indexIni, indexEnd);
+	    	  forum=new Forum(null,title,root.getUser().getNickName(),info,"",new Date());
 	    	  this.setVisible(false);
 	    	  root.newForum(forum);
 	    	  

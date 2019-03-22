@@ -1,4 +1,13 @@
-	package mx.ipn.escom.sockets;
+/*
+ * Author: Morales Flores Victor Leonel
+ * Author: Ortiz Rivas Julio Cesar
+ * ESCOM-IPN(MX)
+ * Date:
+ * Description:
+ * 
+ */
+
+package mx.ipn.escom.sockets;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

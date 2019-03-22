@@ -1,3 +1,12 @@
+/*
+ * Author: Morales Flores Victor Leonel
+ * Author: Ortiz Rivas Julio Cesar
+ * ESCOM-IPN(MX)
+ * Date:
+ * Description:
+ * 
+ */
+
 package mx.ipn.escom.frames;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;

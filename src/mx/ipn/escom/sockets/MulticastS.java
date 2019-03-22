@@ -1,3 +1,13 @@
+/*
+ * Author: Morales Flores Victor Leonel
+ * Author: Ortiz Rivas Julio Cesar
+ * ESCOM-IPN(MX)
+ * Date:
+ * Description:
+ * 
+ */
+
+
 package mx.ipn.escom.sockets;
 
 import java.io.ByteArrayInputStream;
@@ -127,7 +137,7 @@ public class MulticastS {
 	public Object receiveObject() 
 			throws IOException, ClassNotFoundException
 	{
-		System.out.println("A espera de objetos del servidor");
+		//System.out.println("A espera de objetos del servidor");
 		DatagramPacket p = new DatagramPacket(new byte[maxSize],maxSize);
 		multicastSocket.receive(p);//Bloqueante
 		byte[] b=p.getData();

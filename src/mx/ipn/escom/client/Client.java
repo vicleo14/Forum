@@ -1,3 +1,12 @@
+/*
+ * Author: Morales Flores Victor Leonel
+ * Author: Ortiz Rivas Julio Cesar
+ * ESCOM-IPN(MX)
+ * Date:
+ * Description:
+ * 
+ */
+
 package mx.ipn.escom.client;
 import mx.ipn.escom.sockets.MulticastS;
 import mx.ipn.escom.sockets.TcpClientSocket;
@@ -30,6 +39,7 @@ public class Client extends JMainWindow implements ActionListener{
 	
 	private JLogIn jlog;
 	private Forum forum;
+	private ForumsList forumsList;
 	
 	public Client()
 	{
@@ -45,7 +55,7 @@ public class Client extends JMainWindow implements ActionListener{
 		jlog=new JLogIn(this);
 		System.out.println("Termina init");
 		msc=new MulticastS("228.1.1.1",9999,true);
-		ct=new ClientThread(msc);
+		ct=new ClientThread(msc,forumsList);
 		new Thread(ct).start();
 	}	
 	public void newForum(Forum forum)
@@ -101,6 +111,8 @@ public class Client extends JMainWindow implements ActionListener{
 		}
 		return forum;
 	}
+	
+	
 	/*Revisar viabilidad de método*/
 	public ForumsList lookForForum(String input)
 	{	
@@ -124,7 +136,6 @@ public class Client extends JMainWindow implements ActionListener{
 	{	
 		System.out.println("Invoca authenticateUser en Client.");
 		this.setUser(user);
-		view();
 		Boolean bool=false; 
 		try
 		{
@@ -193,17 +204,19 @@ public class Client extends JMainWindow implements ActionListener{
 	public void setJlog(JLogIn jlog) {
 		this.jlog = jlog;
 	}
-	public static void main(String[] args) 
-	{
-		System.out.println("Cliente en ejecución");
-		Client c;
-		c = new Client();	
-	}
+	
 	public JNewForum getJnf() {
 		return jnf;
 	}
 	public void setJnf(JNewForum jnf) {
 		this.jnf = jnf;
+	}
+	
+	public static void main(String[] args) 
+	{
+		System.out.println("Cliente en ejecución");
+		Client c;
+		c = new Client();	
 	}
 	
 }

@@ -1,3 +1,12 @@
+/*
+ * Author: Morales Flores Victor Leonel
+ * Author: Ortiz Rivas Julio Cesar
+ * ESCOM-IPN(MX)
+ * Date:
+ * Description:
+ * 
+ */
+
 package mx.ipn.escom.frames;
 
 import java.awt.GridLayout;
@@ -7,6 +16,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -67,8 +77,18 @@ public class JLogIn extends JFrame  implements ActionListener{
 	    	  String nickName=jtfUser.getText();
 	    	  String password=jpfPswd.getText();
 	    	  User user=new User(nickName,password);  
-	    	  root.authenticateUser(user);
-	    	  this.setVisible(false);
+	    	  Boolean exists=root.authenticateUser(user);
+	    	  if(exists.equals(true))
+	    	  {
+	    		  this.setVisible(false);
+	    		  root.view();
+	    	  }
+	    	  else
+	    	  {
+	    		  JOptionPane.showMessageDialog(root, "El usuario ingresado no existe","Error fatal",JOptionPane.ERROR_MESSAGE);
+	    		  System.exit(-1);
+	    	  }
+	    	  
 	    	  
 	      }
 	      

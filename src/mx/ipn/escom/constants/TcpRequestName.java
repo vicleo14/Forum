@@ -1,3 +1,11 @@
+/*
+ * Author: Morales Flores Victor Leonel
+ * Author: Ortiz Rivas Julio Cesar
+ * ESCOM-IPN(MX)
+ * Date:
+ * Description:
+ * 
+ */
 package mx.ipn.escom.constants;
 
 public class TcpRequestName {

@@ -1,8 +1,19 @@
+/*
+ * Author: Morales Flores Victor Leonel
+ * Author: Ortiz Rivas Julio Cesar
+ * ESCOM-IPN(MX)
+ * Date:
+ * Description:
+ * 
+ */
+
+
 package mx.ipn.escom.server;
 import mx.ipn.escom.sockets.MulticastS;
 import mx.ipn.escom.sockets.TcpClientSocket;
 import mx.ipn.escom.sockets.TcpServerSocket;
 import mx.ipn.escom.entity.Forum;
+import mx.ipn.escom.entity.ForumSummary;
 import mx.ipn.escom.entity.ForumsList;
 import mx.ipn.escom.entity.User;
 import mx.ipn.escom.mysql.Connector;
@@ -13,10 +24,10 @@ import java.io.ObjectOutputStream;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.CallableStatement;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import mx.ipn.escom.entity.Comment;
 
@@ -29,19 +40,43 @@ public class Server {
 	private Connector connector = new Connector();
 	private Connection connectionD;
 	
-	
+	private ForumsList forumsList=new ForumsList();
 	
 	
 	public Server()
 	{
 		tcpss=new  TcpServerSocket();
-		
 		mss=new MulticastS("228.1.1.1",9999,true, 128);
-		st=new ServerThread(mss);
+		forumsList=new ForumsList();
+		this.loadForumsFromDB();
+		st=new ServerThread(mss,forumsList);
 		new Thread(st).start();
 		beginListening();
 	}
-	
+	public void loadForumsFromDB()
+	{
+		try 
+		{
+			connector.connect();
+			connectionD = connector.getConnectionD();
+			CallableStatement statement = connectionD.prepareCall("{CALL publications()}");
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) 
+			{	
+				ForumSummary fs=new ForumSummary(rs.getInt(1),rs.getString(2),rs.getDate(3));	
+				forumsList.addForumSummary(fs);
+			}
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+			String timestamp=sdf.format(new Date());
+			forumsList.setTimestamp(timestamp);
+			
+			System.out.println("Info loaded from database.");
+		}
+		catch (SQLException ex) {
+			System.out.println("ERROR LOADING INFO:"+ex.getMessage());
+			ex.printStackTrace();
+		}
+	}
 	public void beginListening()
 	{
 		try
@@ -92,6 +127,7 @@ public class Server {
 		catch(Exception ex)
 		{
 			System.out.println("Error en Server:"+ex.toString());
+			ex.printStackTrace();
 		}
 	}
 	public void newForum(Forum forum)
@@ -106,15 +142,16 @@ public class Server {
 		try {
 			connector.connect();
 			connectionD = connector.getConnectionD();
-			CallableStatement statement = connectionD.prepareCall("{CALL insertPub(?,?,?,?,?,?)}");
-			statement.setInt(1, forum.getIdPub());
-			statement.setString(2, forum.getTitle());
-			statement.setString(3, forum.getText());
-			statement.setString(4, forum.getImage());
-			statement.setDate(5, new Date(forum.getDate().getTime()));
-			statement.setString(6, forum.getUser());
+			CallableStatement statement = connectionD.prepareCall("{CALL insertPub(?,?,?,?,?)}");
+			statement.setString(1, forum.getTitle());
+			statement.setString(2, forum.getText());
+			statement.setString(3, forum.getImage());
+			statement.setDate(4, new java.sql.Date(forum.getDate().getTime()));//Revisar cambios
+			statement.setString(5, forum.getUser());
 			ResultSet rs = statement.executeQuery();
 			System.out.println("The forum has been saved.");
+			forumsList.getForumsSummary().clear();
+			this.loadForumsFromDB();
 			} catch (SQLException ex) {
 				System.out.println(ex.getMessage());
 			}
@@ -122,7 +159,7 @@ public class Server {
 	
 	public void newComment(Comment comment)
 	{	
-		System.out.println("Invoca al mÃ©todo newComment que conecta con Server.");
+		System.out.println("Invoca al método newComment que conecta con Server.");
 		System.out.println("Forum :"+comment.getForumId());
 		System.out.println("User:"+comment.getUser());
 		System.out.println("Text:"+comment.getText());
@@ -178,7 +215,7 @@ public class Server {
 	
 	public Boolean authenticateUser(User user)
 	{	
-		System.out.println("Invoca authenticateUser en Client. Descomentar para conectar con socket");
+		//System.out.println("Invoca authenticateUser en Client. Descomentar para conectar con socket");
 		System.out.println("User:"+user.getNickName());
 		System.out.println("Password:"+user.getPassword());
 		Boolean bool=true; 
@@ -193,10 +230,15 @@ public class Server {
 			statement.setString(2, user.getPassword());
 			ResultSet rs = statement.executeQuery();
 			if(rs.next())
+			{
+				System.out.println("The user exists.");
 				bool = true;
+			}
 			else
+			{
+				System.out.println("The user doesn't exists.");
 				bool = false;
-			System.out.println("The user exists.");
+			}			
 		} catch (SQLException ex) {
 			System.out.println(ex.getMessage());
 		}
