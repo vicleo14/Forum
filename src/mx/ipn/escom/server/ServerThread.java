@@ -37,7 +37,7 @@ public class ServerThread implements Runnable {
 			for(;;)
 			{
 				mtcs.sendObject(forumsList);
-				Thread.sleep(3000);
+				Thread.sleep(500);
 			}
 		}
 		catch(Exception ex) 

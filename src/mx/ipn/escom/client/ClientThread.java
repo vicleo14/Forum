@@ -22,6 +22,7 @@ import mx.ipn.escom.sockets.MulticastS;
 public class ClientThread implements Runnable {
 	private MulticastS mtcs;
 	private ForumsList forumsList;
+	private Client client;
 
 	public ClientThread()
 	{
@@ -31,10 +32,11 @@ public class ClientThread implements Runnable {
 	{
 		this.mtcs=mtcs;
 	}
-	public ClientThread(MulticastS mtcs,ForumsList forumsList)
+	public ClientThread(MulticastS mtcs,ForumsList forumsList,Client client)
 	{
 		this.mtcs=mtcs;
 		this.forumsList=forumsList;
+		this.client=client;
 		
 	}
 	@Override
@@ -50,12 +52,14 @@ public class ClientThread implements Runnable {
 				{
 					ForumsList fl=(ForumsList)obj;
 					if(forumsList==null)
+					{
 						forumsList=fl;
+						updateList();
+					}
 					else if(!forumsList.getTimestamp().equals(fl.getTimestamp()))
 					{
 						forumsList=fl;
-						System.out.println("Foros actualizados en lista.");
-						System.out.println(fl.toString());
+						updateList();
 					}
 					
 				}
@@ -65,7 +69,19 @@ public class ClientThread implements Runnable {
 		catch(Exception ex) 
 		{
 			System.out.println("MulticastThread in Client error:"+ex.toString());
+			ex.printStackTrace();
 			
+		}
+	}
+	
+	public void updateList()
+	{
+		System.out.println("Foros actualizados en lista.");
+		for(int i=0;i<forumsList.getSize();i++)
+		{
+			System.out.println("topic:"+forumsList.getForumAt(i).getTitle());
+	    	//System.out.println("value:"+i);
+			//client.getModelList().addForumSummary(forumsList.getForumAt(i));
 		}
 	}
 }

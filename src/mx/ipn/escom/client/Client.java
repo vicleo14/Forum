@@ -16,6 +16,7 @@ import mx.ipn.escom.entity.User;
 import mx.ipn.escom.frames.JLogIn;
 import mx.ipn.escom.frames.JMainWindow;
 import mx.ipn.escom.frames.JNewForum;
+import mx.ipn.escom.frames.tools.ForumsListModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,6 +31,7 @@ public class Client extends JMainWindow implements ActionListener{
 	/**
 	 * 
 	 */
+	private ForumsListModel modelList;
 	private static final long serialVersionUID = 1L;
 	private Runnable ct;
 	private MulticastS msc;
@@ -46,25 +48,26 @@ public class Client extends JMainWindow implements ActionListener{
 		super();
 		init();
 		setListeners();
-		
-		forum=new Forum();
-		forum.setDate(new Date());
-		forum.setIdPub(-1);
-		forum.setText("No se ha seleccionado ningún foro");
+		modelList=new ForumsListModel();
+		this.jlstForums.setModel(modelList);
+		//forum=new Forum();
+		//forum.setDate(new Date());
+		//forum.setIdPub(-1);
+		//forum.setText("No se ha seleccionado ningún foro");
 		
 		jlog=new JLogIn(this);
 		System.out.println("Termina init");
 		msc=new MulticastS("228.1.1.1",9999,true);
-		ct=new ClientThread(msc,forumsList);
+		ct=new ClientThread(msc,forumsList,this);
 		new Thread(ct).start();
 	}	
 	public void newForum(Forum forum)
 	{	
 		
-		System.out.println("Invoc al método que conecta con socket. Descomentar código");
-		System.out.println("Forum title:"+forum.getTitle());
-		System.out.println("Forum info:"+forum.getText());
-		System.out.println("Forum user:"+forum.getUser());
+		//System.out.println("Invoca al método que conecta con socket. Descomentar código");
+		//System.out.println("Forum title:"+forum.getTitle());
+		//System.out.println("Forum info:"+forum.getText());
+		//System.out.println("Forum user:"+forum.getUser());
 		setJnf(null);
 		TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
 		try
@@ -217,6 +220,39 @@ public class Client extends JMainWindow implements ActionListener{
 		System.out.println("Cliente en ejecución");
 		Client c;
 		c = new Client();	
+	}
+	public ForumsListModel getModelList() {
+		return modelList;
+	}
+	public void setModelList(ForumsListModel modelList) {
+		this.modelList = modelList;
+	}
+	public Runnable getCt() {
+		return ct;
+	}
+	public void setCt(Runnable ct) {
+		this.ct = ct;
+	}
+	public MulticastS getMsc() {
+		return msc;
+	}
+	public void setMsc(MulticastS msc) {
+		this.msc = msc;
+	}
+	public Forum getForum() {
+		return forum;
+	}
+	public void setForum(Forum forum) {
+		this.forum = forum;
+	}
+	public ForumsList getForumsList() {
+		return forumsList;
+	}
+	public void setForumsList(ForumsList forumsList) {
+		this.forumsList = forumsList;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 	
 }

@@ -133,12 +133,12 @@ public class Server {
 	public void newForum(Forum forum)
 	{	
 		System.out.println("Invoca al método newForum que conecta con Server.");
-		System.out.println("Forum id: "+forum.getIdPub());
-		System.out.println("Forum title: "+forum.getTitle());
-		System.out.println("Forum info: "+forum.getText());
-		System.out.println("Forum user: "+forum.getUser());
-		System.out.println("Forum image: "+forum.getImage());
-		System.out.println("Forum date: "+forum.getDate());
+		//System.out.println("Forum id: "+forum.getIdPub());
+		//System.out.println("Forum title: "+forum.getTitle());
+		//System.out.println("Forum info: "+forum.getText());
+		//System.out.println("Forum user: "+forum.getUser());
+		//System.out.println("Forum image: "+forum.getImage());
+		//System.out.println("Forum date: "+forum.getDate());
 		try {
 			connector.connect();
 			connectionD = connector.getConnectionD();
@@ -244,6 +244,7 @@ public class Server {
 		}
 		return bool;
 	}
+	
 	public static void main(String[] args) {
 		System.out.println("Servidor en ejecución");
 		Server server=new Server();
