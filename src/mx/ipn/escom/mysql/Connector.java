@@ -8,6 +8,7 @@
  */
 
 package mx.ipn.escom.mysql;
+import mx.ipn.escom.constants.DataBaseConstants;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,11 +17,11 @@ import java.sql.CallableStatement;
 import com.mysql.jdbc.Driver;
 	
 public class Connector {
-	private String url = "jdbc:mysql://localhost:3306/";
+	private String url = DataBaseConstants.URL;
     private String base_datos = "FOROREDES";
-    private String usuario = "vicleo14";
-    private String driver = "com.mysql.jdbc.Driver";
-    private String pass = "Vicleo_14";
+    private String usuario = DataBaseConstants.USER;
+    private String driver = DataBaseConstants.DRIVER;
+    private String pass = DataBaseConstants.PASSWORD;
     private Connection connectionD;
     private String noAccessToProcedure="?noAccessToProcedureBodies=true";
     

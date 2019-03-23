@@ -180,6 +180,42 @@ public class TcpServerSocket {
 			System.out.println("Error al leer archivo:"+ex.toString());
 		}
 	}
+	public String readFile(String folder,String newFileName)
+	{
+		String saveLocation="";
+		try
+		{
+			
+			String name=ois.readUTF();
+			
+			long size=ois.readLong();
+			String[] splt=name.split("\\.");
+			int tam=splt.length;
+			String ext="."+splt[tam-1];
+			saveLocation=folder+"/"+newFileName+ext;
+			DataOutputStream dos=new DataOutputStream(new FileOutputStream(saveLocation));
+			byte[] b=new byte[2000];
+			long received=0;
+			int percent=0,n=0;
+			while(received<size)
+			{
+				n=ois.read(b);
+				dos.write(b,0,n);
+				dos.flush();
+				received+=n;
+				percent=(int)((received*100)/size);		
+				System.out.println("\rRecibido:"+percent+"%");
+			}
+			dos.close();
+			
+		}
+		catch(Exception ex) 
+		{
+			
+			System.out.println("Error al leer archivo:"+ex.toString());
+		}
+		return saveLocation;
+	}
 	
 	
 	

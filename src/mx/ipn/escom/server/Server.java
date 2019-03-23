@@ -25,6 +25,7 @@ import mx.ipn.escom.entity.ForumsList;
 import mx.ipn.escom.entity.User;
 import mx.ipn.escom.mysql.Connector;
 
+import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -43,7 +44,7 @@ public class Server {
 	private TcpServerSocket tcpss;
 	private MulticastS mss;
 	private Runnable st;
-	
+	private final String path="server_images/";
 	private Connector connector = new Connector();
 	private Connection connectionD;
 	
@@ -52,13 +53,22 @@ public class Server {
 	
 	public Server()
 	{
+		
 		tcpss=new  TcpServerSocket();
 		mss=new MulticastS("228.1.1.1",9999,true, 128);
 		forumsList=new ForumsList();
 		this.loadForumsFromDB();
 		st=new ServerThread(mss,forumsList);
 		new Thread(st).start();
+		
+		createDirectory(path);
 		beginListening();
+	}
+	public void createDirectory(String dirName)
+	{
+		File dir=new File(dirName);
+		if(!dir.exists())
+			dir.mkdir();
 	}
 	public void loadForumsFromDB()
 	{
@@ -104,20 +114,48 @@ public class Server {
 					}
 					else if(opc.equals(TcpRequestName.NEW_FORUM))
 					{
-						
+						String filename;
+						Forum forum=(Forum)tcpss.readObject();
 						Boolean hasImage=(Boolean)tcpss.readObject();
+						
 						System.out.println("Has image?"+hasImage);
 						if(hasImage)
 						{
-							tcpss.readFile();
+							SimpleDateFormat sdf=new SimpleDateFormat("yyMMdd");
+							SimpleDateFormat sdf2=new SimpleDateFormat("yyMMddHHmmss");
+							String folder=path+"imgs"+sdf.format(new Date());
+							createDirectory(folder);
+							String imageName=forum.getUser()+sdf2.format(new Date());
+							filename=tcpss.readFile(folder,imageName);
+							forum.setImage(filename);
+							System.out.println("File name:"+filename);
 						}
-						Forum forum=(Forum)tcpss.readObject();
+						
 						newForum(forum);
 					}
 					else if(opc.equals(TcpRequestName.NEW_COMMENT))
 					{
+						String filename;
 						Comment comment=(Comment)tcpss.readObject();
+						Boolean hasImage=(Boolean)tcpss.readObject();
+						
+						System.out.println("Has image?"+hasImage);
+						if(hasImage)
+						{
+							SimpleDateFormat sdf=new SimpleDateFormat("yyMMdd");
+							SimpleDateFormat sdf2=new SimpleDateFormat("yyMMddHHmmss");
+							String folder=path+"imgs"+sdf.format(new Date());
+							createDirectory(folder);
+							String imageName=comment.getUser()+sdf2.format(new Date());
+							filename=tcpss.readFile(folder,imageName);
+							comment.setImage(filename);
+							System.out.println("File name:"+filename);
+						}
+						
+						
+						
 						newComment(comment);
+						
 					}
 					else if(opc.equals(TcpRequestName.GET_FORUM))
 					{
@@ -204,14 +242,17 @@ public class Server {
 			ResultSet rs = statement.executeQuery();
 			if(rs.next()!=false)
 				forum=new Forum(rs.getInt("idPublic"), rs.getString("nombre"), rs.getString("nickName"), rs.getString("info"), rs.getString("imagen"), rs.getDate("fecha"));
-			/*
-			while(rs.next()) 
+			
+			CallableStatement statement2 = connectionD.prepareCall("{CALL commentsPub(?)}");
+			statement2.setInt(1, idForum);
+			ResultSet rs2 = statement2.executeQuery();
+			while(rs2.next()) 
 			{
-				Comment comment = new Comment(rs.getInt(1), rs.getInt(6), rs.getString(10), rs.getString(8), rs.getString(9));				
-			}
-			rs.previous();
-			forum = new Forum(rs.getInt(1), rs.getString(2), rs.getString(7), rs.getString(3), rs.getString(4), rs.getDate(5));
-			*/
+				System.out.println("Comentario nuevo");
+				Comment comment = new Comment(rs2.getInt("idPublic"),rs2.getInt("idComent"),rs2.getString("nickName"),rs2.getString("info"),rs2.getString("imagen"));
+				System.out.println("C:"+comment.getText());
+				forum.getComments().add(comment);
+			}			
 			System.out.println("Forum information has been extracted from de database.");
 		}
 		catch (SQLException ex) 

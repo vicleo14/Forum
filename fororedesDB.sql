@@ -9,7 +9,7 @@ CREATE TABLE publicacion(
 	idPublic int not null auto_increment primary key,
 	nombre varchar(100),
 	info varchar(1000),
-	imagen varchar(25),
+	imagen varchar(75),
 	fecha date,
 	nickName varchar(15),
 		foreign key(nickName)
@@ -20,17 +20,15 @@ CREATE TABLE publicacion(
 CREATE TABLE comentario(
 	idComent int not null auto_increment primary key,
 	info varchar(1000),
-	imagen varchar(25),
+	imagen varchar(75),
 	nickName varchar(15),
 	idPublic int,
-		foreign key(nickName)
-			references usuario(nickName)
-				ON UPDATE CASCADE
-				ON DELETE CASCADE,
-		foreign key(idPublic)
-			references publicacion(idPublic)
-				ON UPDATE CASCADE
-				ON DELETE CASCADE);
+	foreign key(nickName) references usuario(nickName)
+	ON UPDATE CASCADE
+	ON DELETE CASCADE,
+	foreign key(idPublic) references publicacion(idPublic)
+	ON UPDATE CASCADE
+	ON DELETE CASCADE);
 
 -- Inserta un usuario a la base de datos
 DELIMITER #
@@ -42,7 +40,7 @@ DELIMITER ;
 
 -- Inserta una publicacion a la base de datos
 DELIMITER #
-CREATE PROCEDURE insertPub(IN name varchar(100), IN inf varchar(1000), IN img varchar(25), IN fech date, IN nick varchar(15))
+CREATE PROCEDURE insertPub(IN name varchar(100), IN inf varchar(1000), IN img varchar(75), IN fech date, IN nick varchar(15))
 BEGIN
 	INSERT INTO publicacion(nombre, info, imagen, fecha, nickName) VALUES (name, inf, img, fech, nick);
 END #
@@ -50,21 +48,32 @@ DELIMITER ;
 
 -- Inserta un comentario a la base de datos
 DELIMITER #
-CREATE PROCEDURE insertCom(IN inf varchar(1000), IN img varchar(25), IN nick varchar(15), IN idP int)
+CREATE PROCEDURE insertCom(IN inf varchar(1000), IN img varchar(75), IN nick varchar(15), IN idP int)
 BEGIN
 	INSERT INTO comentario(info, imagen, nickName,idPublic) VALUES (inf, img, nick, idP);
 END #
 DELIMITER ;
 
--- Regresa los datos de la publicacion idP
-DELIMITER # 
-CREATE PROCEDURE publication(IN idP int)
+--Regresa una publicacion
+DELIMITER #
+CREATE PROCEDURE infoPub(IN idP int)
 BEGIN
-	SELECT p.idPublic, p.nombre, p.info, p.imagen, p.fecha,c.idComent,(SELECT p.nickName FROM punlicacion p WHERE p.idPublic=idP) as creador, c.info, c.imagen, c.nickName
-		FROM publicacion p, comentario c, usuario u
-			WHERE p.nickName=u.nickName AND p.idPublic=c.idPublic AND c.idPublic=idP;
+	SELECT idPublic,nombre,info,imagen,fecha,nickName 
+	FROM publicacion where idPublic=idP;
 END #
 DELIMITER ;
+
+--Regresa comentarios de una publicacion
+DELIMITER #
+CREATE PROCEDURE commentsPub(IN idP int)
+BEGIN
+	SELECT idPublic,idComent,nickName,info,imagen 
+	FROM comentario where idPublic=idP;
+END #
+DELIMITER ;
+
+
+
 
 -- Regresa la lista de publicaciones y su fecha
 DELIMITER #
@@ -81,3 +90,9 @@ BEGIN
 	SELECT * FROM usuario WHERE nickName = nick AND contrasenia = pass;
 END #
 DELIMITER ;
+
+--Creamos usuario para esta BD(Ejecutar desde ROOT)
+CREATE USER 'userForo'@'localhost' IDENTIFIED BY 'Userforo_1';
+GRANT ALL PRIVILEGES ON FOROREDES. * TO 'userForo'@'localhost';
+FLUSH PRIVILEGES;
+

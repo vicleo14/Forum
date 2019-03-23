@@ -46,7 +46,7 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 	private JLogIn jlog;
 	private Forum forum;
 	private ForumsList forumsList;
-	
+	private File commentImage;
 	public Client()
 	{
 		super();
@@ -68,6 +68,7 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 		try
 		{
 			tcpcs.sendObject(TcpRequestName.NEW_FORUM);
+			tcpcs.sendObject(forum);
 			if(f!=null)
 			{
 				tcpcs.sendObject(true);
@@ -75,7 +76,7 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 			}
 			else
 				tcpcs.sendObject(false);
-			tcpcs.sendObject(forum);
+			
 			tcpcs.closeConection();
 		}
 		catch(Exception ex)
@@ -91,6 +92,13 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 			TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
 			tcpcs.sendObject(TcpRequestName.NEW_COMMENT);
 			tcpcs.sendObject(comment);
+			if(commentImage!=null)
+			{
+				tcpcs.sendObject(true);
+				tcpcs.sendFile(commentImage);				
+			}
+			else
+				tcpcs.sendObject(false);
 			tcpcs.closeConection();
 		}
 		catch(Exception ex)
@@ -184,19 +192,19 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 	    	  info=info.substring(indexIni, indexEnd);
 	    	  comment=new Comment(forum.getIdPub(), -1, user.getNickName(), info, "");
 	    	  newComment(comment);
+	    	  commentImage=null;
+	    	  jepComment.setText("");
 	    	  
 	    	  
 	      }
 	      
 	      if(e.getSource().equals(btnLoadImage))
 	      {
-	    	  System.out.println("Boton load image");
 	    	  JFileChooser jfc=new JFileChooser();
-	    	  int r=jfc.showOpenDialog(null);
+	    	  int r=jfc.showOpenDialog(this);
 	    	  if(r==JFileChooser.APPROVE_OPTION)
 	    	  {
-					File f=jfc.getSelectedFile();
-					System.out.println("Leyo archivo");
+					commentImage=jfc.getSelectedFile();
 	    	  }
 	      }
 	}
@@ -280,15 +288,15 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 		String body=forum.getText()+"<br />";
 		String image="";
 		if(!forum.getImage().equals(""))
-			image="<img src='file:"+forum.getImage()+"'  style=\"max-width:100%;width:auto;height:auto;\" /><br />";
+			image="<img src='file:"+forum.getImage()+"'  width='200' height='200' /><br />";
 		String comments="";
 		
 		for(int i=0;i<forum.getComments().size();i++)
 		{
-			comments+="<h3>"+forum.getComments().get(i).getUser()+":</h3><br/>";
+			comments+="<h3>"+forum.getComments().get(i).getUser()+" dice:</h3><br/>";
 			comments+=forum.getComments().get(i).getText();
-			if(forum.getComments().get(i).getImage()!="")
-				comments+="<img src='file:"+forum.getComments().get(i).getImage()+"'  style=\"max-width:100%;width:auto;height:auto;\" /><br />";
+			if(!forum.getComments().get(i).getImage().equals(""))
+				comments+="<img src='file:"+forum.getComments().get(i).getImage()+"'  width='200' height='200'  /><br />";
 		}
 		System.out.println(title+author+body+image+comments);
 		jepForum.setText(title+author+body+image+comments);
