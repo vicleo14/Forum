@@ -175,7 +175,7 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 	    	  int indexIni=info.indexOf("<body>")+7;
 	    	  int indexEnd=info.indexOf("</body>");
 	    	  info=info.substring(indexIni, indexEnd);
-	    	  comment=new Comment(forum.getIdPub(), -1, user.getNickName(), info, "")
+	    	  comment=new Comment(forum.getIdPub(), -1, user.getNickName(), info, "");
 	    	  newComment(comment);
 	    	  
 	    	  
