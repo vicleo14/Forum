@@ -15,8 +15,12 @@
  * */
 package mx.ipn.escom.client;
 
+import java.util.ArrayList;
+
+import mx.ipn.escom.entity.ForumSummary;
 import mx.ipn.escom.entity.ForumsList;
 import mx.ipn.escom.entity.User;
+import mx.ipn.escom.frames.tools.ForumsListModel;
 import mx.ipn.escom.sockets.MulticastS;
 
 public class ClientThread implements Runnable {
@@ -77,11 +81,11 @@ public class ClientThread implements Runnable {
 	public void updateList()
 	{
 		System.out.println("Foros actualizados en lista.");
+		ForumsListModel newflm=new ForumsListModel();
 		for(int i=0;i<forumsList.getSize();i++)
 		{
-			System.out.println("topic:"+forumsList.getForumAt(i).getTitle());
-	    	//System.out.println("value:"+i);
-			//client.getModelList().addForumSummary(forumsList.getForumAt(i));
+			newflm.addForumSummary(forumsList.getForumAt(i));
 		}
+		client.getJlstForums().setModel(newflm);
 	}
 }

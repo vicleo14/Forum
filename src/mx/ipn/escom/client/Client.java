@@ -11,6 +11,7 @@ package mx.ipn.escom.client;
 import mx.ipn.escom.sockets.MulticastS;
 import mx.ipn.escom.sockets.TcpClientSocket;
 import mx.ipn.escom.entity.Forum;
+import mx.ipn.escom.entity.ForumSummary;
 import mx.ipn.escom.entity.ForumsList;
 import mx.ipn.escom.entity.User;
 import mx.ipn.escom.frames.JLogIn;
@@ -23,15 +24,18 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Date;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
-import javax.xml.stream.events.Comment;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import mx.ipn.escom.entity.Comment;
 import mx.ipn.escom.constants.TcpRequestName;
 
-public class Client extends JMainWindow implements ActionListener{
+public class Client extends JMainWindow implements ActionListener,ListSelectionListener{
 	/**
 	 * 
 	 */
-	private ForumsListModel modelList;
+	private DefaultListModel<ForumSummary> modelList;
 	private static final long serialVersionUID = 1L;
 	private Runnable ct;
 	private MulticastS msc;
@@ -48,26 +52,17 @@ public class Client extends JMainWindow implements ActionListener{
 		super();
 		init();
 		setListeners();
-		modelList=new ForumsListModel();
-		this.jlstForums.setModel(modelList);
-		//forum=new Forum();
-		//forum.setDate(new Date());
-		//forum.setIdPub(-1);
-		//forum.setText("No se ha seleccionado ningún foro");
+		modelList=new DefaultListModel<ForumSummary>();
 		
 		jlog=new JLogIn(this);
 		System.out.println("Termina init");
 		msc=new MulticastS("228.1.1.1",9999,true);
 		ct=new ClientThread(msc,forumsList,this);
+		jlstForums.addListSelectionListener(this);
 		new Thread(ct).start();
 	}	
 	public void newForum(Forum forum)
 	{	
-		
-		//System.out.println("Invoca al método que conecta con socket. Descomentar código");
-		//System.out.println("Forum title:"+forum.getTitle());
-		//System.out.println("Forum info:"+forum.getText());
-		//System.out.println("Forum user:"+forum.getUser());
 		setJnf(null);
 		TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
 		try
@@ -110,7 +105,7 @@ public class Client extends JMainWindow implements ActionListener{
 		}
 		catch(Exception ex)
 		{
-			System.out.println("Error al eniar comentario:"+ex.toString());
+			System.out.println("Error al enviar comentario:"+ex.toString());
 		}
 		return forum;
 	}
@@ -176,7 +171,14 @@ public class Client extends JMainWindow implements ActionListener{
 	      if(e.getSource().equals(btnAddComment))
 	      {
 	    	  Comment comment;
-	    	  System.out.println("Boton add comment");
+	    	  String info=jepComment.getText();
+	    	  int indexIni=info.indexOf("<body>")+7;
+	    	  int indexEnd=info.indexOf("</body>");
+	    	  info=info.substring(indexIni, indexEnd);
+	    	  comment=new Comment(forum.getIdPub(), -1, user.getNickName(), info, "")
+	    	  newComment(comment);
+	    	  
+	    	  
 	      }
 	      
 	      if(e.getSource().equals(btnLoadImage))
@@ -221,10 +223,10 @@ public class Client extends JMainWindow implements ActionListener{
 		Client c;
 		c = new Client();	
 	}
-	public ForumsListModel getModelList() {
+	public DefaultListModel<ForumSummary> getModelList() {
 		return modelList;
 	}
-	public void setModelList(ForumsListModel modelList) {
+	public void setModelList(DefaultListModel<ForumSummary> modelList) {
 		this.modelList = modelList;
 	}
 	public Runnable getCt() {
@@ -253,6 +255,36 @@ public class Client extends JMainWindow implements ActionListener{
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	
+	public void valueChanged(ListSelectionEvent event) 
+	{
+		int index=jlstForums.getSelectedIndex();
+		ForumsListModel flm=(ForumsListModel)jlstForums.getModel();
+		ForumSummary fs=flm.getForumSummaryByIndex(index);
+		this.forum=this.getForum(fs.getId());
+		loadForum();
+    }
+	public void loadForum()
+	{
+		System.out.println("Image value:"+forum.getImage());
+		String title="<h1>"+forum.getTitle()+"("+forum.getDate()+")</h1><br/>";
+		String author="<h2>by "+forum.getUser()+"</h2><br />";
+		String body=forum.getText()+"<br />";
+		String image="";
+		if(!forum.getImage().equals(""))
+			image="<img src='file:"+forum.getImage()+"'  style=\"max-width:100%;width:auto;height:auto;\" /><br />";
+		String comments="";
+		
+		for(int i=0;i<forum.getComments().size();i++)
+		{
+			comments+="<h3>"+forum.getComments().get(i).getUser()+":</h3><br/>";
+			comments+=forum.getComments().get(i).getText();
+			if(forum.getComments().get(i).getImage()!="")
+				comments+="<img src='file:"+forum.getComments().get(i).getImage()+"'  style=\"max-width:100%;width:auto;height:auto;\" /><br />";
+		}
+		System.out.println(title+author+body+image+comments);
+		jepForum.setText(title+author+body+image+comments);
 	}
 	
 }

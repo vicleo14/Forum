@@ -25,7 +25,7 @@ public class ForumsListModel extends AbstractListModel
     	
     public void addForumSummary(ForumSummary fs){
       localForumsList.add(fs);
-      this.fireIntervalAdded(this, getSize(), getSize()+1);
+      //this.fireIntervalAdded(this, getSize(), getSize()+1);
      }
     public void deleteForumSummary(int index)
     {
@@ -36,16 +36,15 @@ public class ForumsListModel extends AbstractListModel
     {
     	return localForumsList.get(index);
     }
-    public void removeContent()
-    {
-	    for(int i=localForumsList.size()-1;i>=0;i--)
-	    {
-	    	deleteForumSummary(i);
-	    	System.out.println("list size:"+localForumsList.size());
-	    	System.out.println("value:"+i);
-	    }
-    	
-    	System.out.println("New size:"+localForumsList.size());
-    }
+
+	public ArrayList<ForumSummary> getLocalForumsList() {
+		return localForumsList;
+	}
+
+	public void setLocalForumsList(ArrayList<ForumSummary> localForumsList) {
+		this.localForumsList = localForumsList;
+	}
+    
+   
 }
 

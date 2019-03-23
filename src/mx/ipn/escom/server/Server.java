@@ -108,6 +108,11 @@ public class Server {
 					else if(opc.equals(TcpRequestName.GET_FORUM))
 					{
 						
+						Integer id=(Integer)tcpss.readObject();
+						System.out.println("Ingresa a get_forum:"+id);
+						Forum f=getForum(id);
+						tcpss.sendObjec(f);
+						
 					}
 					else if(opc.equals(TcpRequestName.LOOK_FOR_FORUM))
 					{
@@ -186,16 +191,19 @@ public class Server {
 		{
 			connector.connect();
 			connectionD = connector.getConnectionD();
-			CallableStatement statement = connectionD.prepareCall("{CALL publication(?,?,?,?,?,?,?,?,?,?)}");
+			CallableStatement statement = connectionD.prepareCall("{CALL infoPub(?)}");
 			statement.setInt(1, idForum);
 			ResultSet rs = statement.executeQuery();
+			if(rs.next()!=false)
+				forum=new Forum(rs.getInt("idPublic"), rs.getString("nombre"), rs.getString("nickName"), rs.getString("info"), rs.getString("imagen"), rs.getDate("fecha"));
+			/*
 			while(rs.next()) 
 			{
 				Comment comment = new Comment(rs.getInt(1), rs.getInt(6), rs.getString(10), rs.getString(8), rs.getString(9));				
 			}
 			rs.previous();
 			forum = new Forum(rs.getInt(1), rs.getString(2), rs.getString(7), rs.getString(3), rs.getString(4), rs.getDate(5));
-			
+			*/
 			System.out.println("Forum information has been extracted from de database.");
 		}
 		catch (SQLException ex) 

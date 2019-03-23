@@ -65,6 +65,7 @@ public class JLogIn extends JFrame  implements ActionListener{
 		this.setSize(width, height);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
 	

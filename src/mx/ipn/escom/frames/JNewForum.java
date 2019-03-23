@@ -77,6 +77,7 @@ public class JNewForum extends JFrame  implements ActionListener{
 		this.setSize(width, height);
 		this.setResizable(true);
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		
 	}
