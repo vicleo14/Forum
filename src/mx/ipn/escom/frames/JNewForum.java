@@ -43,6 +43,7 @@ public class JNewForum extends JFrame  implements ActionListener{
 	private Client root;
 	private final int width=400;
 	private final int height=500;
+	private File imageFile;
 	
 	public JNewForum(Client root)
 	{
@@ -93,7 +94,7 @@ public class JNewForum extends JFrame  implements ActionListener{
 	    	  info=info.substring(indexIni, indexEnd);
 	    	  forum=new Forum(null,title,root.getUser().getNickName(),info,"",new Date());
 	    	  this.setVisible(false);
-	    	  root.newForum(forum);
+	    	  root.newForum(forum,imageFile);
 	    	  
 	      }
 	      if(e.getSource().equals(btnImage))
@@ -103,18 +104,7 @@ public class JNewForum extends JFrame  implements ActionListener{
 	    	  int r=jfc.showOpenDialog(this);
 	    	  if(r==JFileChooser.APPROVE_OPTION)
 	    	  {
-					File f=jfc.getSelectedFile();
-					String name="";
-					String path="";
-					name=f.getName();
-					path=f.getAbsolutePath();
-					forum.setImage(name);
-					String text="";
-					text=(forum.getText()==null)?text:text+forum.getText();
-					text+="<img src='file:"+path+"' width='200' height='200'></img><br />";
-					forum.setText(text);
-					System.out.println(text);
-					jepInfo.setText(text);
+					imageFile=jfc.getSelectedFile();
 	    	  }
 	      }
 	      

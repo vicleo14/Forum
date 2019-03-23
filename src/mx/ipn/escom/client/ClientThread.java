@@ -8,11 +8,6 @@
  */
 
 
-/*
- * TODO:
- * Implementar el codigo necesario para que la lista lateral izquierda de la GUI
- * principal sea actualizada al recibir una modificacion.
- * */
 package mx.ipn.escom.client;
 
 import java.util.ArrayList;

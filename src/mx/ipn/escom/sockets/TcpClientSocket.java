@@ -57,7 +57,7 @@ public class TcpClientSocket {
 		}		
 	}
 	
-	public void sendObjec(Object obj)
+	public void sendObject(Object obj)
 	{
 		try
 		{

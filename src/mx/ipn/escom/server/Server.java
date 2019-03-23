@@ -6,6 +6,13 @@
  * Description:
  * 
  */
+/*TODO: Escribir imagen en una carpeta basado en la fecha en la que se subio con un nombre unico
+ * 
+ * Escribir la ruta de la imagen con el nuevo nombre al objeto Forum que recibe por newForum(...)
+ * 
+ * Realizar la peticion a la BD de los comentarios cuando solicitan un foro.
+ * 
+ * */
 
 
 package mx.ipn.escom.server;
@@ -93,10 +100,17 @@ public class Server {
 					{
 						User user=(User)tcpss.readObject();
 						Boolean bool=authenticateUser(user);
-						tcpss.sendObjec(bool);
+						tcpss.sendObject(bool);
 					}
 					else if(opc.equals(TcpRequestName.NEW_FORUM))
 					{
+						
+						Boolean hasImage=(Boolean)tcpss.readObject();
+						System.out.println("Has image?"+hasImage);
+						if(hasImage)
+						{
+							tcpss.readFile();
+						}
 						Forum forum=(Forum)tcpss.readObject();
 						newForum(forum);
 					}
@@ -111,7 +125,7 @@ public class Server {
 						Integer id=(Integer)tcpss.readObject();
 						System.out.println("Ingresa a get_forum:"+id);
 						Forum f=getForum(id);
-						tcpss.sendObjec(f);
+						tcpss.sendObject(f);
 						
 					}
 					else if(opc.equals(TcpRequestName.LOOK_FOR_FORUM))
@@ -138,12 +152,6 @@ public class Server {
 	public void newForum(Forum forum)
 	{	
 		System.out.println("Invoca al método newForum que conecta con Server.");
-		//System.out.println("Forum id: "+forum.getIdPub());
-		//System.out.println("Forum title: "+forum.getTitle());
-		//System.out.println("Forum info: "+forum.getText());
-		//System.out.println("Forum user: "+forum.getUser());
-		//System.out.println("Forum image: "+forum.getImage());
-		//System.out.println("Forum date: "+forum.getDate());
 		try {
 			connector.connect();
 			connectionD = connector.getConnectionD();

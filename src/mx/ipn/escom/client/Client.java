@@ -61,14 +61,21 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 		jlstForums.addListSelectionListener(this);
 		new Thread(ct).start();
 	}	
-	public void newForum(Forum forum)
+	public void newForum(Forum forum,File f)
 	{	
 		setJnf(null);
 		TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
 		try
 		{
-			tcpcs.sendObjec(TcpRequestName.NEW_FORUM);
-			tcpcs.sendObjec(forum);
+			tcpcs.sendObject(TcpRequestName.NEW_FORUM);
+			if(f!=null)
+			{
+				tcpcs.sendObject(true);
+				tcpcs.sendFile(f);				
+			}
+			else
+				tcpcs.sendObject(false);
+			tcpcs.sendObject(forum);
 			tcpcs.closeConection();
 		}
 		catch(Exception ex)
@@ -82,8 +89,8 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 		try
 		{
 			TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
-			tcpcs.sendObjec(TcpRequestName.NEW_COMMENT);
-			tcpcs.sendObjec(comment);
+			tcpcs.sendObject(TcpRequestName.NEW_COMMENT);
+			tcpcs.sendObject(comment);
 			tcpcs.closeConection();
 		}
 		catch(Exception ex)
@@ -98,8 +105,8 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 		try
 		{
 			TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
-			tcpcs.sendObjec(TcpRequestName.GET_FORUM);
-			tcpcs.sendObjec(idForum);
+			tcpcs.sendObject(TcpRequestName.GET_FORUM);
+			tcpcs.sendObject(idForum);
 			forum =(Forum)tcpcs.readObject();
 			tcpcs.closeConection();
 		}
@@ -118,8 +125,8 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 		try
 		{
 			TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
-			tcpcs.sendObjec(TcpRequestName.LOOK_FOR_FORUM);
-			tcpcs.sendObjec(input);
+			tcpcs.sendObject(TcpRequestName.LOOK_FOR_FORUM);
+			tcpcs.sendObject(input);
 			forumsList =(ForumsList)tcpcs.readObject();
 			tcpcs.closeConection();
 		}
@@ -138,8 +145,8 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 		try
 		{
 			TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
-			tcpcs.sendObjec(TcpRequestName.AUTHENTICATE_USER);
-			tcpcs.sendObjec(user);
+			tcpcs.sendObject(TcpRequestName.AUTHENTICATE_USER);
+			tcpcs.sendObject(user);
 			bool =(Boolean)tcpcs.readObject();
 			tcpcs.closeConection();
 		}
