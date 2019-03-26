@@ -17,6 +17,7 @@ import mx.ipn.escom.entity.User;
 import mx.ipn.escom.frames.JLogIn;
 import mx.ipn.escom.frames.JMainWindow;
 import mx.ipn.escom.frames.JNewForum;
+import mx.ipn.escom.frames.JSearch;
 import mx.ipn.escom.frames.tools.ForumsListModel;
 
 import java.awt.event.ActionEvent;
@@ -129,20 +130,20 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 	/*Revisar viabilidad de método*/
 	public ForumsList lookForForum(String input)
 	{	
-		ForumsList forumsList=null;
+		ForumsList forList=null;
 		try
 		{
 			TcpClientSocket tcpcs=new TcpClientSocket("127.0.0.1",1234);
 			tcpcs.sendObject(TcpRequestName.LOOK_FOR_FORUM);
 			tcpcs.sendObject(input);
-			forumsList =(ForumsList)tcpcs.readObject();
+			forList =(ForumsList)tcpcs.readObject();
 			tcpcs.closeConection();
 		}
 		catch(Exception ex)
 		{
 			System.out.println("Error al eniar comentario:"+ex.toString());
 		}
-		return forumsList;
+		return forList;
 	}
 	
 	public Boolean authenticateUser(User user)
@@ -176,6 +177,10 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 	      if(e.getSource().equals(btnSearch))
 	      {
 	    	  System.out.println("Boton search");
+	    	  String info= txtSearch.getText();
+	    	  System.out.println("Searching word: "+info);
+	    	  System.out.println("Search recived.");
+	    	  JSearch js = new JSearch(info, lookForForum(info), this);
 	      }
 	      
 	      if(e.getSource().equals(btnNewForum))
@@ -278,9 +283,9 @@ public class Client extends JMainWindow implements ActionListener,ListSelectionL
 		ForumsListModel flm=(ForumsListModel)jlstForums.getModel();
 		ForumSummary fs=flm.getForumSummaryByIndex(index);
 		this.forum=this.getForum(fs.getId());
-		loadForum();
+		loadForum(forum);
     }
-	public void loadForum()
+	public void loadForum(Forum forum)
 	{
 		System.out.println("Image value:"+forum.getImage());
 		String title="<h1>"+forum.getTitle()+"("+forum.getDate()+")</h1><br/>";

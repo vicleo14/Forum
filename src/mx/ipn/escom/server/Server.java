@@ -168,7 +168,10 @@ public class Server {
 					}
 					else if(opc.equals(TcpRequestName.LOOK_FOR_FORUM))
 					{
-						
+						String input = (String)tcpss.readObject();
+						System.out.println("Foro a buscar: "+input);
+						ForumsList fl = lookForForum(input);
+						tcpss.sendObject(fl);
 					}
 					else
 					{
@@ -263,11 +266,31 @@ public class Server {
 	}
 	public ForumsList lookForForum(String input)
 	{	
-		ForumsList forumsList=null;
+		ForumsList forList= new ForumsList();
 		
+		try 
+		{
+			connector.connect();
+			connectionD = connector.getConnectionD();
+			CallableStatement statement = connectionD.prepareCall("{CALL lookPub(?)}");
+			statement.setString(1, input);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()) 
+			{
+				System.out.println(""+rs.getString(2)+"("+rs.getDate(3)+")");
+				ForumSummary fs=new ForumSummary(rs.getInt(1),rs.getString(2),rs.getDate(3));	
+				forList.addForumSummary(fs);
+			}			
+			System.out.println("Forums sent.");
+			System.out.println("forumsList.getSize() = "+forumsList.getSize()+".");
+			
+		}
+		catch (SQLException ex) 
+		{
+			System.out.println(ex.getMessage());
+		}
 		
-		
-		return forumsList;
+		return forList;
 	}
 	
 	public Boolean authenticateUser(User user)
