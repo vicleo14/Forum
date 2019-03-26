@@ -72,6 +72,13 @@ BEGIN
 END #
 DELIMITER ;
 
+--Busacr Foro
+DELIMITER #
+CREATE PROCEDURE lookPub(IN text varchar(100))
+BEGIN
+	SELECT idPublic, nombre, fecha FROM publicacion WHERE concat(nombre,'(', fecha,')') like concat('%', text, '%');
+END #
+DELIMITER ;
 
 
 
